@@ -1,10 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор</title>
+    <style>
+        /* Стили для калькулятора */
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 600px; margin: 50px auto; text-align: center; }
+        input { padding: 10px; font-size: 18px; width: 200px; margin: 10px; }
+        button { padding: 10px; font-size: 18px; margin: 10px; }
+        .result { margin-top: 20px; font-size: 24px; }
+        .info { margin-top: 30px; font-size: 16px; }
+    </style>
 </head>
 <body>
-$END$
+<div class="container">
+    <h1>Калькулятор</h1>
+    <div>
+        <input type="text" id="number1" placeholder="Введите число 1">
+        <input type="text" id="number2" placeholder="Введите число 2">
+    </div>
+    <div>
+        <button onclick="calculate('add')">+</button>
+        <button onclick="calculate('subtract')">-</button>
+        <button onclick="calculate('multiply')">×</button>
+        <button onclick="calculate('divide')">÷</button>
+    </div>
+    <div class="result">
+        <p id="result">Результат: </p>
+    </div>
+    <div class="info">
+        <p>ФИО студента: Горелик Мария Вадимовна</p>
+        <p>Курс: 3</p>
+        <p>Группа: 11</p>
+        <p>Год: 2024</p>
+    </div>
+</div>
+<script>
+    function calculate(operation) {
+        const number1 = document.getElementById('number1').value;
+        const number2 = document.getElementById('number2').value;
+        const formData = new FormData();
+        formData.append('number1', number1);
+        formData.append('number2', number2);
+        formData.append('operation', operation);
+
+        fetch('/calculate', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                document.getElementById('result').innerText = 'Ошибка: ' + data.error;
+            } else {
+                document.getElementById('result').innerText = 'Результат: ' + data.result;
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
 </body>
 </html>
